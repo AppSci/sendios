@@ -40,7 +40,7 @@ func New(projectID, clientID int, clientToken string) *Client {
 func NewFromEnv() (*Client, error) {
 	env := os.Getenv("SENDIOS_CONFIG")
 	if env == "" {
-		return nil, errors.New("empty SENDIOS_CONFIG env")
+		return nil, nil
 	}
 
 	values, err := url.ParseQuery(env)
