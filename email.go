@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"net/http"
-	"os"
+	"strconv"
 )
 
 const (
@@ -53,7 +53,7 @@ func (c *Client) SendEmail(r EmailRequest) (*EmailResponse, error) {
 	}
 	data, err := json.Marshal(req{
 		EmailRequest: r,
-		ClientID:     os.Getenv("SENDIOS_CLIENT_ID"),
+		ClientID:     strconv.Itoa(c.Config.ClientID),
 		ProjectID:    c.Config.Project,
 	})
 	if err != nil {
