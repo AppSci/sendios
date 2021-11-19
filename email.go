@@ -48,8 +48,8 @@ type EmailResponse struct {
 func (c *Client) SendEmail(r EmailRequest) (*EmailResponse, error) {
 	type req struct {
 		EmailRequest
-		ClientID  string
-		ProjectID int
+		ClientID  string `json:"client_id"`
+		ProjectID int    `json:"project_id"`
 	}
 	data, err := json.Marshal(req{
 		EmailRequest: r,
