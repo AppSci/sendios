@@ -25,11 +25,12 @@ func TestSendEmail(t *testing.T) {
 	c.DebugRequests = true
 
 	result, err := c.SendEmail(EmailRequest{
-		TypeID:   "1",
+		TypeID:   "11",
 		Category: CategorySystem,
-		Data: Data{
-			User: User{
-				Email: "igor.chornij@gen.tech",
+		Data: map[string]interface{}{
+			"redirect_url": "https://localhost:3000",
+			"user": map[string]interface{}{
+				"email": "igor.chornij@gen.tech",
 			},
 		},
 	})

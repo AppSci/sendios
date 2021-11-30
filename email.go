@@ -18,22 +18,8 @@ type (
 	EmailRequest struct {
 		TypeID   string                 `json:"type_id,omitempty"`
 		Category string                 `json:"category,omitempty"`
-		Data     Data                   `json:"data"`
+		Data     map[string]interface{} `json:"data"`
 		Meta     map[string]interface{} `json:"meta,omitempty"`
-	}
-	Data struct {
-		User User `json:"user,omitempty"`
-	}
-	User struct {
-		Email      string `json:"email,omitempty"`
-		Name       string `json:"name,omitempty"`
-		Age        string `json:"age,omitempty"`
-		Gender     string `json:"gender,omitempty"`
-		Language   string `json:"language,omitempty"`
-		Country    string `json:"country,omitempty"`
-		PlatformID string `json:"platform_id,omitempty"`
-		Vip        string `json:"vip,omitempty"`
-		Photo      string `json:"photo,omitempty"`
 	}
 )
 
