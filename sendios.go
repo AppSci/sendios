@@ -1,7 +1,6 @@
 package sendios
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/pkg/errors"
 	"io"
@@ -87,8 +86,7 @@ func (c *Client) makeRequest(method, url string, reader io.Reader) (int, []byte,
 
 	if c.DebugRequests {
 		data, _ := httputil.DumpRequest(req, true)
-		fmt.Println("----------------------------------------------------------------------------")
-		fmt.Println("[Request:]\n" + string(data) + "\n----")
+		fmt.Printf("Sendios request:\n%s\n", data)
 	}
 
 	resp, err := c.HTTPClient.Do(req)
@@ -104,7 +102,7 @@ func (c *Client) makeRequest(method, url string, reader io.Reader) (int, []byte,
 
 	if c.DebugRequests {
 		data, _ := httputil.DumpResponse(resp, true)
-		fmt.Println("[Response:]\n" + string(data))
+		fmt.Printf("Sendios response:\n%s\n", data)
 	}
 
 	data, err := ioutil.ReadAll(resp.Body)
@@ -126,8 +124,4 @@ type ErrorResponse struct {
 	Data struct {
 		Error string `json:"error"`
 	} `json:"data"`
-}
-
-func mapResponse(data []byte, v interface{}) error {
-	return json.Unmarshal(data, v)
 }

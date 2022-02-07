@@ -6,18 +6,17 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"net/http"
-	"strconv"
 )
 
 const (
-	CategorySystem  = "1"
-	CategoryTrigger = "2"
+	CategorySystem  = 1
+	CategoryTrigger = 2
 )
 
 type (
 	EmailRequest struct {
-		TypeID   string                 `json:"type_id,omitempty"`
-		Category string                 `json:"category,omitempty"`
+		TypeID   int                    `json:"type_id,omitempty"`
+		Category int                    `json:"category,omitempty"`
 		Data     map[string]interface{} `json:"data"`
 		Meta     map[string]interface{} `json:"meta,omitempty"`
 	}
@@ -26,20 +25,23 @@ type (
 type EmailResponse struct {
 	Meta `json:"_meta"`
 	Data struct {
-		Queued bool `json:"queued"`
-		RTime  int  `json:"r_time"`
+		Error  string `json:"error"`
+		Queued bool   `json:"queued"`
+		RTime  int    `json:"r_time"`
 	} `json:"data"`
 }
+
+// https://sendios.readme.io/reference/send-system-email
 
 func (c *Client) SendEmail(r EmailRequest) (*EmailResponse, error) {
 	type req struct {
 		EmailRequest
-		ClientID  string `json:"client_id"`
-		ProjectID int    `json:"project_id"`
+		ClientID  int `json:"client_id"`
+		ProjectID int `json:"project_id"`
 	}
 	data, err := json.Marshal(req{
 		EmailRequest: r,
-		ClientID:     strconv.Itoa(c.Config.ClientID),
+		ClientID:     c.Config.ClientID,
 		ProjectID:    c.Config.Project,
 	})
 	if err != nil {
@@ -52,10 +54,14 @@ func (c *Client) SendEmail(r EmailRequest) (*EmailResponse, error) {
 	}
 
 	var resp EmailResponse
-	if err := mapResponse(body, &resp); err != nil {
+	if err := json.Unmarshal(body, &resp); err != nil {
 		fmt.Println(string(body))
 
-		return nil, errors.Wrap(err, "map last payment response")
+		return nil, errors.Wrap(err, "map eemail response")
+	}
+
+	if resp.Data.Error != "" {
+		return &resp, errors.New(resp.Data.Error)
 	}
 
 	return &resp, nil

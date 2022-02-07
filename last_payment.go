@@ -43,7 +43,7 @@ func (c *Client) SendLastPayment(req LastPaymentRequest) (*LastPaymentResponse, 
 
 	if statusCode == http.StatusNotFound {
 		var resp ErrorResponse
-		if err := mapResponse(body, &resp); err != nil {
+		if err := json.Unmarshal(body, &resp); err != nil {
 			fmt.Println(string(body))
 
 			return nil, errors.Wrap(err, "map last payment error")
@@ -53,7 +53,7 @@ func (c *Client) SendLastPayment(req LastPaymentRequest) (*LastPaymentResponse, 
 	}
 
 	var resp LastPaymentResponse
-	if err := mapResponse(body, &resp); err != nil {
+	if err := json.Unmarshal(body, &resp); err != nil {
 		fmt.Println(string(body))
 
 		return nil, errors.Wrap(err, "map last payment response")

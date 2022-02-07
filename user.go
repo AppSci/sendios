@@ -131,7 +131,7 @@ func (c *Client) GetUserInfo(email string) (*UserResponse, error) {
 
 	if statusCode != http.StatusOK {
 		var resp ErrorResponse
-		if err := mapResponse(body, &resp); err != nil {
+		if err := json.Unmarshal(body, &resp); err != nil {
 			fmt.Println(string(body))
 
 			return nil, errors.Wrap(err, "map get user error")
@@ -141,7 +141,7 @@ func (c *Client) GetUserInfo(email string) (*UserResponse, error) {
 	}
 
 	var resp UserResponse
-	if err := mapResponse(body, &resp); err != nil {
+	if err := json.Unmarshal(body, &resp); err != nil {
 		fmt.Println(string(body))
 
 		return nil, errors.Wrap(err, "map get user response")
@@ -167,7 +167,7 @@ func (c *Client) SaveUser(email string, req CreateUserRequest) (*CreateUserRespo
 
 	if statusCode != http.StatusOK {
 		var resp ErrorResponse
-		if err := mapResponse(body, &resp); err != nil {
+		if err := json.Unmarshal(body, &resp); err != nil {
 			fmt.Println(string(body))
 
 			return nil, errors.Wrap(err, "map save user error")
@@ -177,7 +177,7 @@ func (c *Client) SaveUser(email string, req CreateUserRequest) (*CreateUserRespo
 	}
 
 	var resp CreateUserResponse
-	if err := mapResponse(body, &resp); err != nil {
+	if err := json.Unmarshal(body, &resp); err != nil {
 		fmt.Println(string(body))
 
 		return nil, errors.Wrap(err, "map save user response")
