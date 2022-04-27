@@ -3,6 +3,7 @@ package sendios
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/appsci/app-core/pointer"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -63,4 +64,14 @@ func TestMapResponse(t *testing.T) {
 	assert.Equal(t, 1, resp.Meta.Count)
 
 	assert.NotZero(t, resp.Data.User.ID)
+}
+
+func TestMapUser(t *testing.T) {
+	data, err := json.Marshal(CreateUserRequest{VIP: pointer.Int(1)})
+	require.NoError(t, err)
+	assert.Equal(t, `{"vip":1}`, string(data))
+
+	data, err = json.Marshal(CreateUserRequest{VIP: pointer.Int(0)})
+	require.NoError(t, err)
+	assert.Equal(t, `{"vip":0}`, string(data))
 }

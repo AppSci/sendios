@@ -102,16 +102,16 @@ type (
 		Age           int    `json:"age,omitempty"`
 		Photo         string `json:"photo,omitempty"`
 		AK            string `json:"ak,omitempty"`
-		VIP           int    `json:"vip,omitempty"`
+		VIP           *int   `json:"vip,omitempty"`
 		Language      string `json:"language,omitempty"`
 		Country       string `json:"country,omitempty"`
-		PlatformID    int    `json:"platform_id,omitempty"`
-		ListID        int    `json:"list_id,omitempty"`
-		Status        int    `json:"status,omitempty"`
-		PartnerID     int    `json:"partner_id,omitempty"`
-		Field1        int    `json:"field1,omitempty"`
-		SessionsCount int    `json:"sessions_count,omitempty"`
-		SessionLast   int    `json:"session_last,omitempty"`
+		PlatformID    *int   `json:"platform_id,omitempty"`
+		ListID        *int   `json:"list_id,omitempty"`
+		Status        *int   `json:"status,omitempty"`
+		PartnerID     *int   `json:"partner_id,omitempty"`
+		Field1        *int   `json:"field1,omitempty"`
+		SessionsCount *int   `json:"sessions_count,omitempty"`
+		SessionLast   *int   `json:"session_last,omitempty"`
 	}
 	CreateUserResponse struct {
 		Meta `json:"_meta"`
