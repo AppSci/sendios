@@ -103,3 +103,61 @@ func TestUnsubscribe(t *testing.T) {
 	require.NotNil(t, unsubscribeUserResponse)
 	require.True(t, unsubscribeUserResponse.Data.Unsub)
 }
+
+func TestIsNotUnsubscribed(t *testing.T) {
+	require.NoError(t, env.Load(".env"))
+
+	client, err := NewFromEnv()
+	require.NoError(t, err)
+	require.NotNil(t, client)
+
+	client.DebugRequests = true
+
+	email := fmt.Sprintf("%s-testx@mail.ua", guuid.NewString()[:4])
+
+	_, err = client.SendEmail(EmailRequest{
+		TypeID:   1,
+		Category: CategorySystem,
+		Data: map[string]interface{}{
+			"user": map[string]interface{}{
+				"email": email,
+			},
+		},
+	})
+	require.NoError(t, err)
+
+	resp, err := client.CheckIsUnsubscribed(email)
+	require.NoError(t, err)
+	require.False(t, resp)
+}
+func TestIsUnsubscribed(t *testing.T) {
+	require.NoError(t, env.Load(".env"))
+
+	client, err := NewFromEnv()
+	require.NoError(t, err)
+	require.NotNil(t, client)
+
+	client.DebugRequests = true
+
+	email := fmt.Sprintf("%s-testx@mail.ua", guuid.NewString()[:4])
+
+	_, err = client.SendEmail(EmailRequest{
+		TypeID:   1,
+		Category: CategorySystem,
+		Data: map[string]interface{}{
+			"user": map[string]interface{}{
+				"email": email,
+			},
+		},
+	})
+	require.NoError(t, err)
+
+	unsubscribeUserResponse, err := client.UnsubscribeUser(email)
+	require.NoError(t, err)
+	require.NotNil(t, unsubscribeUserResponse)
+	require.True(t, unsubscribeUserResponse.Data.Unsub)
+
+	resp, err := client.CheckIsUnsubscribed(email)
+	require.NoError(t, err)
+	require.True(t, resp)
+}

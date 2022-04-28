@@ -279,3 +279,73 @@ func (c *Client) CreateClientUser(email string) (*CreateClientUserResponse, erro
 
 	return &resp, nil
 }
+
+type UnsubscribeStatusResponse struct {
+	Meta struct {
+		Status string `json:"status"`
+		Time   int    `json:"time"`
+		Count  int    `json:"count"`
+	} `json:"_meta"`
+	Data struct {
+		Result struct {
+			ProjectID int `json:"project_id"`
+			UserID    int `json:"user_id"`
+			SourceID  int `json:"source_id"`
+			Meta      struct {
+				Message string `json:"message"`
+			} `json:"meta"`
+			CreatedAt string `json:"created_at"`
+			UpdatedAt string `json:"updated_at"`
+		} `json:"result"`
+	} `json:"data"`
+}
+
+type SubscribedStatusResponse struct {
+	Meta struct {
+		Status string `json:"status"`
+		Time   int    `json:"time"`
+		Count  int    `json:"count"`
+	} `json:"_meta"`
+	Data struct {
+		Result bool `json:"result"`
+	} `json:"data"`
+}
+
+func (c *Client) CheckIsUnsubscribedUser(userID int64) (bool, error) {
+	statusCode, body, err := c.makeRequest(http.MethodGet, fmt.Sprintf("https://api.sendios.io/v1/unsub/isunsub/%d", userID), nil)
+	if err != nil {
+		return false, errors.Wrap(err, "check unsubscribed")
+	}
+
+	if statusCode != http.StatusOK {
+		var resp ErrorResponse
+		if err = json.Unmarshal(body, &resp); err != nil {
+			fmt.Println(string(body))
+
+			return false, errors.Wrap(err, "map check unsubscribed error")
+		}
+
+		return false, fmt.Errorf("check unsubscribed error: %s", resp.Data.Error)
+	}
+
+	var resp UnsubscribeStatusResponse
+	if err = json.Unmarshal(body, &resp); err != nil {
+		var r SubscribedStatusResponse
+		if err = json.Unmarshal(body, &r); err != nil {
+			return false, errors.Wrap(err, "map check unsubscribed response")
+		}
+
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func (c *Client) CheckIsUnsubscribed(email string) (bool, error) {
+	userInfo, err := c.GetUserInfo(email)
+	if err != nil {
+		return false, errors.Wrap(err, "get user info")
+	}
+
+	return c.CheckIsUnsubscribedUser(userInfo.Data.User.ID)
+}
