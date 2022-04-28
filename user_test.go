@@ -3,7 +3,9 @@ package sendios
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/appsci/app-core/env"
 	"github.com/appsci/app-core/pointer"
+	guuid "github.com/google/uuid"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -74,4 +76,30 @@ func TestMapUser(t *testing.T) {
 	data, err = json.Marshal(CreateUserRequest{VIP: pointer.Int(0)})
 	require.NoError(t, err)
 	assert.Equal(t, `{"vip":0}`, string(data))
+}
+
+func TestUnsubscribe(t *testing.T) {
+	require.NoError(t, env.Load(".env"))
+
+	client, err := NewFromEnv()
+	require.NoError(t, err)
+	require.NotNil(t, client)
+
+	email := fmt.Sprintf("%s-testx@mail.ua", guuid.NewString()[:4])
+
+	_, err = client.SendEmail(EmailRequest{
+		TypeID:   1,
+		Category: CategorySystem,
+		Data: map[string]interface{}{
+			"user": map[string]interface{}{
+				"email": email,
+			},
+		},
+	})
+	require.NoError(t, err)
+
+	unsubscribeUserResponse, err := client.UnsubscribeUser(email)
+	require.NoError(t, err)
+	require.NotNil(t, unsubscribeUserResponse)
+	require.True(t, unsubscribeUserResponse.Data.Unsub)
 }

@@ -113,7 +113,7 @@ type (
 		SessionsCount *int   `json:"sessions_count,omitempty"`
 		SessionLast   *int   `json:"session_last,omitempty"`
 	}
-	CreateUserResponse struct {
+	CreateUserFieldsResponse struct {
 		Meta `json:"_meta"`
 		Data struct {
 			Result bool `json:"result"`
@@ -150,7 +150,7 @@ func (c *Client) GetUserInfo(email string) (*UserResponse, error) {
 	return &resp, nil
 }
 
-func (c *Client) SaveUser(email string, req CreateUserRequest) (*CreateUserResponse, error) {
+func (c *Client) SetUserData(email string, req CreateUserRequest) (*CreateUserFieldsResponse, error) {
 	emailHash := base64.StdEncoding.EncodeToString([]byte(email))
 
 	data, err := json.Marshal(req)
@@ -176,11 +176,105 @@ func (c *Client) SaveUser(email string, req CreateUserRequest) (*CreateUserRespo
 		return nil, fmt.Errorf("save user error: %s", resp.Data.Error)
 	}
 
-	var resp CreateUserResponse
+	var resp CreateUserFieldsResponse
 	if err := json.Unmarshal(body, &resp); err != nil {
 		fmt.Println(string(body))
 
 		return nil, errors.Wrap(err, "map save user response")
+	}
+
+	return &resp, nil
+}
+
+type UnsubscribeUserResponse struct {
+	Meta struct {
+		Status string `json:"status"`
+		Time   int64  `json:"time"`
+		Count  int    `json:"count"`
+	} `json:"_meta"`
+	Data struct {
+		Unsub bool `json:"unsub"`
+	} `json:"data"`
+}
+
+func (c *Client) UnsubscribeUser(email string) (*UnsubscribeUserResponse, error) {
+	emailHash := base64.StdEncoding.EncodeToString([]byte(email))
+
+	url := fmt.Sprintf("https://api.sendios.io/v1/unsub/admin/%d/email/%s", c.Config.Project, emailHash)
+
+	statusCode, body, err := c.makeRequest(http.MethodPost, url, nil)
+	if err != nil {
+		return nil, errors.Wrap(err, "unsubscribe user")
+	}
+
+	if statusCode != http.StatusOK {
+		var resp ErrorResponse
+		if err = json.Unmarshal(body, &resp); err != nil {
+			fmt.Println(string(body))
+
+			return nil, errors.Wrap(err, "map unsubscribe user error")
+		}
+
+		return nil, fmt.Errorf("unsubscribe user error: %s", resp.Data.Error)
+	}
+
+	var resp UnsubscribeUserResponse
+	if err = json.Unmarshal(body, &resp); err != nil {
+		fmt.Println(string(body))
+
+		return nil, errors.Wrap(err, "map unsubscribe user response")
+	}
+
+	return &resp, nil
+}
+
+type CreateClientUserResponse struct {
+	Meta struct {
+		Status string `json:"status"`
+		Time   int64  `json:"time"`
+		Count  int    `json:"count"`
+	} `json:"_meta"`
+	Data struct {
+		Message string `json:"message"`
+		Date    string `json:"date"`
+		Status  bool   `json:"status"`
+	} `json:"data"`
+}
+
+func (c *Client) CreateClientUser(email string) (*CreateClientUserResponse, error) {
+	type CreateClientUserRequest struct {
+		Email        string `json:"email"`
+		ProjectId    int    `json:"project_id"`
+		ClientUserId int    `json:"client_user_id"`
+	}
+
+	data, err := json.Marshal(CreateClientUserRequest{
+		Email:        email,
+		ProjectId:    c.Config.Project,
+		ClientUserId: c.Config.ClientID,
+	})
+
+	statusCode, body, err := c.makeRequest(http.MethodPost, "https://api.sendios.io/v1/clientuser/create", bytes.NewReader(data))
+	if err != nil {
+		return nil, errors.Wrap(err, "create user")
+	}
+
+	if statusCode != http.StatusOK {
+		var resp ErrorResponse
+		if err := json.Unmarshal(body, &resp); err != nil {
+			fmt.Println(string(body))
+
+			return nil, errors.Wrap(err, "map create user error")
+		}
+
+		return nil, fmt.Errorf("create user error: %s", resp.Data.Error)
+	}
+
+	var resp CreateClientUserResponse
+	if err = json.Unmarshal(body, &resp); err != nil {
+		fmt.Println(string(body))
+
+		return nil, errors.Wrap(err, "map create user response")
 	}
 
 	return &resp, nil
