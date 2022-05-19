@@ -48,16 +48,20 @@ func (c *Client) SendEmail(r EmailRequest) (*EmailResponse, error) {
 		return nil, errors.Wrap(err, "marshal payload")
 	}
 
-	_, body, err := c.makeRequest(http.MethodPost, "https://api.sendios.io/v1/push/system", bytes.NewReader(data))
+	statusCode, body, err := c.makeRequest(http.MethodPost, "https://api.sendios.io/v1/push/system", bytes.NewReader(data))
 	if err != nil {
 		return nil, errors.Wrap(err, "send email")
 	}
 
+	if statusCode == http.StatusBadGateway {
+		return nil, errors.New("bad gateway")
+	}
+
 	var resp EmailResponse
-	if err := json.Unmarshal(body, &resp); err != nil {
+	if err = json.Unmarshal(body, &resp); err != nil {
 		fmt.Println(string(body))
 
-		return nil, errors.Wrap(err, "map eemail response")
+		return nil, errors.Wrap(err, "map email response")
 	}
 
 	if resp.Data.Error != "" {
