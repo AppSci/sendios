@@ -32,31 +32,31 @@ type UserResponse struct {
 	Data struct {
 		User struct {
 			ID int64 `json:"id"`
-			//ProjectID    int         `json:"project_id"`
-			//ProjectTitle string      `json:"project_title"`
-			//Email        string      `json:"email"`
-			//Name         string      `json:"name"`
-			//Gender       interface{} `json:"gender"`
-			//Country      string      `json:"country"`
-			//Language     string      `json:"language"`
-			//ErrResponse  int         `json:"err_response"`
-			//LastOnline   interface{} `json:"last_online"`
-			//LastReaction interface{} `json:"last_reaction"`
-			//LastMailed   string      `json:"last_mailed"`
-			//LastRequest  interface{} `json:"last_request"`
-			//Activation   interface{} `json:"activation"`
-			//Meta         struct {
+			// ProjectID    int         `json:"project_id"`
+			// ProjectTitle string      `json:"project_title"`
+			// Email        string      `json:"email"`
+			// Name         string      `json:"name"`
+			// Gender       interface{} `json:"gender"`
+			// Country      string      `json:"country"`
+			// Language     string      `json:"language"`
+			// ErrResponse  int         `json:"err_response"`
+			// LastOnline   interface{} `json:"last_online"`
+			// LastReaction interface{} `json:"last_reaction"`
+			// LastMailed   string      `json:"last_mailed"`
+			// LastRequest  interface{} `json:"last_request"`
+			// Activation   interface{} `json:"activation"`
+			// Meta         struct {
 			//	Profile struct {
 			//		Age       int         `json:"age"`
 			//		Ak        interface{} `json:"ak"`
 			//		Photo     interface{} `json:"photo"`
 			//		PartnerID interface{} `json:"partner_id"`
 			//	} `json:"profile"`
-			//} `json:"meta"`
-			//Clicks    int    `json:"clicks"`
-			//Sends     int    `json:"sends"`
-			//CreatedAt string `json:"created_at"`
-			//SentMails []struct {
+			// } `json:"meta"`
+			// Clicks    int    `json:"clicks"`
+			// Sends     int    `json:"sends"`
+			// CreatedAt string `json:"created_at"`
+			// SentMails []struct {
 			//	ID          int64       `json:"id"`
 			//	CategoryID  int         `json:"category_id"`
 			//	TypeID      int         `json:"type_id"`
@@ -73,12 +73,12 @@ type UserResponse struct {
 			//	ServerIP    string      `json:"server_ip"`
 			//	SourceName  string      `json:"source_name"`
 			//	TypeSig     string      `json:"type_sig"`
-			//} `json:"sent_mails"`
-			//Unsubscribe      []interface{} `json:"unsubscribe"`
-			//UnsubscribeTypes []interface{} `json:"unsubscribe_types"`
-			//UnsubPromo       []interface{} `json:"unsub_promo"`
-			//WebPush          []interface{} `json:"webpush"`
-			//LastPayment      struct {
+			// } `json:"sent_mails"`
+			// Unsubscribe      []interface{} `json:"unsubscribe"`
+			// UnsubscribeTypes []interface{} `json:"unsubscribe_types"`
+			// UnsubPromo       []interface{} `json:"unsub_promo"`
+			// WebPush          []interface{} `json:"webpush"`
+			// LastPayment      struct {
 			//	ID           int         `json:"id"`
 			//	UserID       int         `json:"user_id"`
 			//	ProjectID    int         `json:"project_id"`
@@ -88,32 +88,16 @@ type UserResponse struct {
 			//	Active       int         `json:"active"`
 			//	PaymentType  interface{} `json:"payment_type"`
 			//	Amount       interface{} `json:"amount"`
-			//} `json:"last_payment"`
-			//ChannelID    interface{} `json:"channel_id"`
-			//SubChannelID interface{} `json:"subchannel_id"`
+			// } `json:"last_payment"`
+			// ChannelID    interface{} `json:"channel_id"`
+			// SubChannelID interface{} `json:"subchannel_id"`
 		} `json:"user"`
 	} `json:"data"`
 }
 
 type (
-	CreateUserRequest struct {
-		Name          string `json:"name,omitempty"`
-		Gender        string `json:"gender,omitempty"`
-		Age           int    `json:"age,omitempty"`
-		Photo         string `json:"photo,omitempty"`
-		AK            string `json:"ak,omitempty"`
-		VIP           *int   `json:"vip,omitempty"`
-		Language      string `json:"language,omitempty"`
-		Country       string `json:"country,omitempty"`
-		PlatformID    *int   `json:"platform_id,omitempty"`
-		ListID        *int   `json:"list_id,omitempty"`
-		Status        *int   `json:"status,omitempty"`
-		PartnerID     *int   `json:"partner_id,omitempty"`
-		Field1        *int   `json:"field1,omitempty"`
-		SessionsCount *int   `json:"sessions_count,omitempty"`
-		SessionLast   *int   `json:"session_last,omitempty"`
-	}
-	CreateUserFieldsResponse struct {
+	UpdateUserFieldsRequest  map[string]interface{}
+	UpdateUserFieldsResponse struct {
 		Meta `json:"_meta"`
 		Data struct {
 			Result bool `json:"result"`
@@ -150,7 +134,7 @@ func (c *Client) GetUserInfo(email string) (*UserResponse, error) {
 	return &resp, nil
 }
 
-func (c *Client) SetUserData(email string, req CreateUserRequest) (*CreateUserFieldsResponse, error) {
+func (c *Client) SetUserData(email string, req UpdateUserFieldsRequest) (*UpdateUserFieldsResponse, error) {
 	emailHash := base64.StdEncoding.EncodeToString([]byte(email))
 
 	data, err := json.Marshal(req)
@@ -176,7 +160,7 @@ func (c *Client) SetUserData(email string, req CreateUserRequest) (*CreateUserFi
 		return nil, fmt.Errorf("save user error: %s", resp.Data.Error)
 	}
 
-	var resp CreateUserFieldsResponse
+	var resp UpdateUserFieldsResponse
 	if err := json.Unmarshal(body, &resp); err != nil {
 		fmt.Println(string(body))
 
