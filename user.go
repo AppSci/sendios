@@ -31,67 +31,97 @@ type UserResponse struct {
 	Meta `json:"_meta"`
 	Data struct {
 		User struct {
-			ID int64 `json:"id"`
-			// ProjectID    int         `json:"project_id"`
-			// ProjectTitle string      `json:"project_title"`
-			// Email        string      `json:"email"`
-			// Name         string      `json:"name"`
-			// Gender       interface{} `json:"gender"`
-			// Country      string      `json:"country"`
-			// Language     string      `json:"language"`
-			// ErrResponse  int         `json:"err_response"`
-			// LastOnline   interface{} `json:"last_online"`
-			// LastReaction interface{} `json:"last_reaction"`
-			// LastMailed   string      `json:"last_mailed"`
-			// LastRequest  interface{} `json:"last_request"`
-			// Activation   interface{} `json:"activation"`
-			// Meta         struct {
-			//	Profile struct {
-			//		Age       int         `json:"age"`
-			//		Ak        interface{} `json:"ak"`
-			//		Photo     interface{} `json:"photo"`
-			//		PartnerID interface{} `json:"partner_id"`
-			//	} `json:"profile"`
-			// } `json:"meta"`
-			// Clicks    int    `json:"clicks"`
-			// Sends     int    `json:"sends"`
-			// CreatedAt string `json:"created_at"`
-			// SentMails []struct {
-			//	ID          int64       `json:"id"`
-			//	CategoryID  int         `json:"category_id"`
-			//	TypeID      int         `json:"type_id"`
-			//	SubjectID   int         `json:"subject_id"`
-			//	TemplateID  int         `json:"template_id"`
-			//	SplitGroup  int         `json:"split_group"`
-			//	SourceID    int         `json:"source_id"`
-			//	ServerID    int         `json:"server_id"`
-			//	CreatedAt   string      `json:"created_at"`
-			//	MailGroupID int         `json:"mail_group_id"`
-			//	PreHeaderID interface{} `json:"pre_header_id"`
-			//	CategorySig string      `json:"category_sig"`
-			//	ServerName  string      `json:"server_name"`
-			//	ServerIP    string      `json:"server_ip"`
-			//	SourceName  string      `json:"source_name"`
-			//	TypeSig     string      `json:"type_sig"`
-			// } `json:"sent_mails"`
-			// Unsubscribe      []interface{} `json:"unsubscribe"`
-			// UnsubscribeTypes []interface{} `json:"unsubscribe_types"`
-			// UnsubPromo       []interface{} `json:"unsub_promo"`
-			// WebPush          []interface{} `json:"webpush"`
-			// LastPayment      struct {
-			//	ID           int         `json:"id"`
-			//	UserID       int         `json:"user_id"`
-			//	ProjectID    int         `json:"project_id"`
-			//	StartedAt    int         `json:"started_at"`
-			//	PaymentCount int         `json:"payment_count"`
-			//	ExpiresAt    int         `json:"expires_at"`
-			//	Active       int         `json:"active"`
-			//	PaymentType  interface{} `json:"payment_type"`
-			//	Amount       interface{} `json:"amount"`
-			// } `json:"last_payment"`
-			// ChannelID    interface{} `json:"channel_id"`
-			// SubChannelID interface{} `json:"subchannel_id"`
+			ID           int64       `json:"id"`
+			ProjectID    int         `json:"project_id"`
+			ProjectTitle string      `json:"project_title"`
+			Email        string      `json:"email"`
+			Name         string      `json:"name"`
+			Gender       string      `json:"gender"`
+			Country      interface{} `json:"country"`
+			Language     interface{} `json:"language"`
+			ErrResponse  int         `json:"err_response"`
+			LastOnline   interface{} `json:"last_online"`
+			LastReaction interface{} `json:"last_reaction"`
+			LastMailed   string      `json:"last_mailed"`
+			LastRequest  interface{} `json:"last_request"`
+			Activation   interface{} `json:"activation"`
+			Meta         interface{} `json:"meta"`
+			Clicks       int         `json:"clicks"`
+			Sends        int         `json:"sends"`
+			CreatedAt    string      `json:"created_at"`
+			SentMails    []struct {
+				ID          int64       `json:"id"`
+				CategoryID  int         `json:"category_id"`
+				TypeID      int         `json:"type_id"`
+				SubjectID   int         `json:"subject_id"`
+				TemplateID  int         `json:"template_id"`
+				SplitGroup  int         `json:"split_group"`
+				SourceID    int         `json:"source_id"`
+				ServerID    int         `json:"server_id"`
+				CreatedAt   string      `json:"created_at"`
+				MailGroupID int         `json:"mail_group_id"`
+				PreHeaderID interface{} `json:"pre_header_id"`
+				CategorySig string      `json:"category_sig"`
+				ServerName  string      `json:"server_name"`
+				ServerIp    string      `json:"server_ip"`
+				SourceName  string      `json:"source_name"`
+				TypeSig     string      `json:"type_sig"`
+			} `json:"sent_mails"`
+			Unsubscribe      interface{}            `json:"unsubscribe"`
+			UnsubscribeTypes []interface{}          `json:"unsubscribe_types"`
+			UnsubPromo       interface{}            `json:"unsub_promo"`
+			Webpush          interface{}            `json:"webpush"`
+			LastPayment      interface{}            `json:"last_payment"`
+			ChannelID        interface{}            `json:"channel_id"`
+			SubchannelID     interface{}            `json:"subchannel_id"`
+			CustomFields     map[string]interface{} `json:"custom_fields"`
+			Vip              int                    `json:"vip"`
 		} `json:"user"`
+	} `json:"data"`
+}
+
+type UserResponseByID struct {
+	Meta `json:"_meta"`
+	Data struct {
+		Result struct {
+			User struct {
+				ProjectId    int         `json:"project_id"`
+				ListId       interface{} `json:"list_id"`
+				Email        string      `json:"email"`
+				Name         string      `json:"name"`
+				LanguageId   interface{} `json:"language_id"`
+				CityId       interface{} `json:"city_id"`
+				VendorId     int         `json:"vendor_id"`
+				ValidId      interface{} `json:"valid_id"`
+				CountryId    interface{} `json:"country_id"`
+				PlatformId   interface{} `json:"platform_id"`
+				Gender       string      `json:"gender"`
+				Confirm      int         `json:"confirm"`
+				Vip          int         `json:"vip"`
+				ErrResponse  int         `json:"err_response"`
+				LastOnline   int         `json:"last_online"`
+				LastReaction int         `json:"last_reaction"`
+				LastMailed   int         `json:"last_mailed"`
+				CreatedAt    string      `json:"created_at"`
+				Id           int         `json:"id"`
+				RegisteredAt string      `json:"registered_at"`
+				UpdatedAt    string      `json:"updated_at"`
+			} `json:"user"`
+			CustomFields struct {
+				MetaProfilePhoto             string `json:"meta.profile.photo"`
+				MetaProfileAge               int    `json:"meta.profile.age"`
+				TrafficId                    string `json:"traffic_id"`
+				BlogTraumaUrl                string `json:"blog.trauma_url"`
+				BonusUrl                     string `json:"bonus_url"`
+				UserSalesUrl                 string `json:"user.sales_url"`
+				ResultsUrl                   string `json:"results_url"`
+				UserEmail                    string `json:"user.email"`
+				UserName                     string `json:"user.name"`
+				IsEligibleForMarketingEmails int    `json:"is_eligible_for_marketing_emails"`
+				TrialPrice                   int    `json:"trial.price"`
+				FunnelId                     int    `json:"funnel_id"`
+			} `json:"custom_fields"`
+		} `json:"result"`
 	} `json:"data"`
 }
 
@@ -134,9 +164,9 @@ func (c *Client) GetUserInfo(email string) (*UserResponse, error) {
 	return &resp, nil
 }
 
-func (c *Client) GetUserInfoByID(id string) (*UserResponse, error) {
+func (c *Client) GetUserInfoByID(id int64) (*UserResponseByID, error) {
 	// https://sendios.readme.io/reference/get-user-custom-fields-by-user
-	url := fmt.Sprintf("https://api.sendios.io/v1/userfields/user/%s", id)
+	url := fmt.Sprintf("https://api.sendios.io/v1/userfields/user/%d", id)
 
 	statusCode, body, err := c.makeRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -154,7 +184,7 @@ func (c *Client) GetUserInfoByID(id string) (*UserResponse, error) {
 		return nil, fmt.Errorf("get user error: %s", resp.Data.Error)
 	}
 
-	var resp UserResponse
+	var resp UserResponseByID
 	if err := json.Unmarshal(body, &resp); err != nil {
 		fmt.Println(string(body))
 
