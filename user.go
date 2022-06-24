@@ -134,6 +134,36 @@ func (c *Client) GetUserInfo(email string) (*UserResponse, error) {
 	return &resp, nil
 }
 
+func (c *Client) GetUserInfoByID(id string) (*UserResponse, error) {
+	// https://sendios.readme.io/reference/get-user-custom-fields-by-user
+	url := fmt.Sprintf("https://api.sendios.io/v1/userfields/user/%s", id)
+
+	statusCode, body, err := c.makeRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, errors.Wrap(err, "get user info")
+	}
+
+	if statusCode != http.StatusOK {
+		var resp ErrorResponse
+		if err := json.Unmarshal(body, &resp); err != nil {
+			fmt.Println(string(body))
+
+			return nil, errors.Wrap(err, "map get user error")
+		}
+
+		return nil, fmt.Errorf("get user error: %s", resp.Data.Error)
+	}
+
+	var resp UserResponse
+	if err := json.Unmarshal(body, &resp); err != nil {
+		fmt.Println(string(body))
+
+		return nil, errors.Wrap(err, "map get user response")
+	}
+
+	return &resp, nil
+}
+
 func (c *Client) SetUserData(email string, req UpdateUserFieldsRequest) (*UpdateUserFieldsResponse, error) {
 	emailHash := base64.StdEncoding.EncodeToString([]byte(email))
 
