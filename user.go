@@ -40,6 +40,7 @@ type UserResponse struct {
 			Country      interface{} `json:"country"`
 			Language     interface{} `json:"language"`
 			ErrResponse  int         `json:"err_response"`
+			Confirm      int         `json:"confirm"`
 			LastOnline   interface{} `json:"last_online"`
 			LastReaction interface{} `json:"last_reaction"`
 			LastMailed   string      `json:"last_mailed"`
