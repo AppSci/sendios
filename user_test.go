@@ -104,6 +104,22 @@ func TestUnsubscribe(t *testing.T) {
 	require.True(t, unsubscribeUserResponse.Data.Unsub)
 }
 
+func TestProvideClientID(t *testing.T) {
+	require.NoError(t, env.Load(".env"))
+
+	client, err := NewFromEnv()
+	require.NoError(t, err)
+	require.NotNil(t, client)
+
+	resp, err := client.ProvideClientID(ProvideClientRequest{
+		Email:        "testx-black@gmail.com",
+		ProjectID:    21515,
+		ClientUserID: "coach:300c8e14-f628-47f7-8545-da442991c25b",
+	})
+	require.NoError(t, err)
+	spew.Dump(resp)
+}
+
 func TestIsNotUnsubscribed(t *testing.T) {
 	require.NoError(t, env.Load(".env"))
 

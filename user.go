@@ -394,3 +394,53 @@ func (c *Client) CheckIsUnsubscribed(email string) (bool, error) {
 
 	return c.CheckIsUnsubscribedUser(userInfo.Data.User.ID)
 }
+
+type (
+	ProvideClientRequest struct {
+		Email        string `json:"email"`
+		ProjectID    int    `json:"project_id"`
+		ClientUserID string `json:"client_user_id"`
+	}
+	ProvideClientResponse struct {
+		Meta `json:"_meta"`
+		Data struct {
+			Message string `json:"message"`
+			Date    string `json:"date"`
+			Status  bool   `json:"status"`
+		} `json:"data"`
+	}
+)
+
+func (c *Client) ProvideClientID(req ProvideClientRequest) (*ProvideClientResponse, error) {
+	// https://sendios.readme.io/reference/providing-user-id-on-product
+
+	data, err := json.Marshal(req)
+	if err != nil {
+		return nil, errors.Wrap(err, "marshal request")
+	}
+
+	statusCode, body, err := c.makeRequest(http.MethodPost, "https://api.sendios.io/v1/clientuser/create", bytes.NewReader(data))
+	if err != nil {
+		return nil, errors.Wrap(err, "unsubscribe user")
+	}
+
+	if statusCode != http.StatusOK {
+		var resp ErrorResponse
+		if err = json.Unmarshal(body, &resp); err != nil {
+			fmt.Println(string(body))
+
+			return nil, errors.Wrap(err, "map unsubscribe user error")
+		}
+
+		return nil, fmt.Errorf("unsubscribe user error: %s", resp.Data.Error)
+	}
+
+	var resp ProvideClientResponse
+	if err = json.Unmarshal(body, &resp); err != nil {
+		fmt.Println(string(body))
+
+		return nil, errors.Wrap(err, "map unsubscribe user response")
+	}
+
+	return &resp, nil
+}
