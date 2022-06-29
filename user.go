@@ -68,15 +68,15 @@ type UserResponse struct {
 				SourceName  string      `json:"source_name"`
 				TypeSig     string      `json:"type_sig"`
 			} `json:"sent_mails"`
-			Unsubscribe      interface{}            `json:"unsubscribe"`
-			UnsubscribeTypes []interface{}          `json:"unsubscribe_types"`
-			UnsubPromo       interface{}            `json:"unsub_promo"`
-			Webpush          interface{}            `json:"webpush"`
-			LastPayment      interface{}            `json:"last_payment"`
-			ChannelID        interface{}            `json:"channel_id"`
-			SubchannelID     interface{}            `json:"subchannel_id"`
-			CustomFields     map[string]interface{} `json:"custom_fields"`
-			Vip              int                    `json:"vip"`
+			Unsubscribe      interface{}   `json:"unsubscribe"`
+			UnsubscribeTypes []interface{} `json:"unsubscribe_types"`
+			UnsubPromo       interface{}   `json:"unsub_promo"`
+			Webpush          interface{}   `json:"webpush"`
+			LastPayment      interface{}   `json:"last_payment"`
+			ChannelID        interface{}   `json:"channel_id"`
+			SubchannelID     interface{}   `json:"subchannel_id"`
+			CustomFields     interface{}   `json:"custom_fields"`
+			Vip              int           `json:"vip"`
 		} `json:"user"`
 	} `json:"data"`
 }
@@ -108,20 +108,7 @@ type UserResponseByID struct {
 				RegisteredAt string      `json:"registered_at"`
 				UpdatedAt    string      `json:"updated_at"`
 			} `json:"user"`
-			CustomFields struct {
-				MetaProfilePhoto             string `json:"meta.profile.photo"`
-				MetaProfileAge               int    `json:"meta.profile.age"`
-				TrafficId                    string `json:"traffic_id"`
-				BlogTraumaUrl                string `json:"blog.trauma_url"`
-				BonusUrl                     string `json:"bonus_url"`
-				UserSalesUrl                 string `json:"user.sales_url"`
-				ResultsUrl                   string `json:"results_url"`
-				UserEmail                    string `json:"user.email"`
-				UserName                     string `json:"user.name"`
-				IsEligibleForMarketingEmails int    `json:"is_eligible_for_marketing_emails"`
-				TrialPrice                   int    `json:"trial.price"`
-				FunnelId                     int    `json:"funnel_id"`
-			} `json:"custom_fields"`
+			CustomFields interface{} `json:"custom_fields"`
 		} `json:"result"`
 	} `json:"data"`
 }
