@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/appsci/app-core/env"
 	"github.com/appsci/app-core/pointer"
+	"github.com/davecgh/go-spew/spew"
 	guuid "github.com/google/uuid"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
@@ -48,6 +49,7 @@ func TestGetUndefinedUser(t *testing.T) {
 	require.NoError(t, err)
 
 	c := New(project, client, os.Getenv("SENDIOS_TOKEN"))
+	c.DebugRequests = true
 
 	user, err := c.GetUserInfo("undefined@gmail.com")
 	require.Error(t, err)
@@ -69,11 +71,11 @@ func TestMapResponse(t *testing.T) {
 }
 
 func TestMapUser(t *testing.T) {
-	data, err := json.Marshal(CreateUserRequest{VIP: pointer.Int(1)})
+	data, err := json.Marshal(UpdateUserFieldsRequest{"vip": pointer.Int(1)})
 	require.NoError(t, err)
 	assert.Equal(t, `{"vip":1}`, string(data))
 
-	data, err = json.Marshal(CreateUserRequest{VIP: pointer.Int(0)})
+	data, err = json.Marshal(UpdateUserFieldsRequest{"vip": pointer.Int(0)})
 	require.NoError(t, err)
 	assert.Equal(t, `{"vip":0}`, string(data))
 }
@@ -111,13 +113,14 @@ func TestProvideClientID(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, client)
 
-	resp, err := client.ProvideClientID(ProvideClientRequest{
-		Email:        "testx-black@gmail.com",
+	client.DebugRequests = true
+
+	_, err = client.ProvideClientID(ProvideClientRequest{
+		Email:        "testxblack5284@gmail.com",
 		ProjectID:    21515,
-		ClientUserID: "coach:300c8e14-f628-47f7-8545-da442991c25b",
+		ClientUserID: "240a50ee-1cd8-41ee-9146-82e35ef58ed4",
 	})
 	require.NoError(t, err)
-	spew.Dump(resp)
 }
 
 func TestIsNotUnsubscribed(t *testing.T) {
@@ -146,6 +149,7 @@ func TestIsNotUnsubscribed(t *testing.T) {
 	require.NoError(t, err)
 	require.False(t, resp)
 }
+
 func TestIsUnsubscribed(t *testing.T) {
 	require.NoError(t, env.Load(".env"))
 
@@ -176,4 +180,51 @@ func TestIsUnsubscribed(t *testing.T) {
 	resp, err := client.CheckIsUnsubscribed(email)
 	require.NoError(t, err)
 	require.True(t, resp)
+}
+
+func TestGetInfoByID(t *testing.T) {
+	require.NoError(t, godotenv.Load())
+
+	require.NotEmpty(t, os.Getenv("SENDIOS_PROJECT"))
+	require.NotEmpty(t, os.Getenv("SENDIOS_CLIENT_ID"))
+	require.NotEmpty(t, os.Getenv("SENDIOS_TOKEN"))
+	require.NotEmpty(t, os.Getenv("TEST_EMAIL"))
+
+	project, err := strconv.Atoi(os.Getenv("SENDIOS_PROJECT"))
+	require.NoError(t, err)
+	client, err := strconv.Atoi(os.Getenv("SENDIOS_CLIENT_ID"))
+	require.NoError(t, err)
+
+	c := New(project, client, os.Getenv("SENDIOS_TOKEN"))
+	c.DebugRequests = true
+
+	// pandaID - d54fc1b9-24a9-41c9-b5cf-ce6dd2ce84d2
+	// email - lizzieartes52@gmail.com
+	// sendios user id - 1574050517
+	info, err := c.GetUserInfoByID(1574050517)
+	require.NoError(t, err)
+
+	spew.Dump(info)
+}
+
+func TestGetUserFields(t *testing.T) {
+	require.NoError(t, godotenv.Load())
+
+	require.NotEmpty(t, os.Getenv("SENDIOS_PROJECT"))
+	require.NotEmpty(t, os.Getenv("SENDIOS_CLIENT_ID"))
+	require.NotEmpty(t, os.Getenv("SENDIOS_TOKEN"))
+	require.NotEmpty(t, os.Getenv("TEST_EMAIL"))
+
+	project, err := strconv.Atoi(os.Getenv("SENDIOS_PROJECT"))
+	require.NoError(t, err)
+	client, err := strconv.Atoi(os.Getenv("SENDIOS_CLIENT_ID"))
+	require.NoError(t, err)
+
+	c := New(project, client, os.Getenv("SENDIOS_TOKEN"))
+	c.DebugRequests = true
+
+	info, err := c.GetUserFields("stagecoachtestx1+last@gmail.com")
+	require.NoError(t, err)
+
+	spew.Dump(info)
 }

@@ -86,16 +86,16 @@ type UserResponseByID struct {
 	Data struct {
 		Result struct {
 			User struct {
-				ProjectId    int         `json:"project_id"`
-				ListId       interface{} `json:"list_id"`
+				ProjectID    int         `json:"project_id"`
+				ListID       interface{} `json:"list_id"`
 				Email        string      `json:"email"`
 				Name         string      `json:"name"`
-				LanguageId   interface{} `json:"language_id"`
-				CityId       interface{} `json:"city_id"`
-				VendorId     int         `json:"vendor_id"`
-				ValidId      interface{} `json:"valid_id"`
-				CountryId    interface{} `json:"country_id"`
-				PlatformId   interface{} `json:"platform_id"`
+				LanguageID   interface{} `json:"language_id"`
+				CityID       int         `json:"city_id"`
+				VendorID     int         `json:"vendor_id"`
+				ValidID      interface{} `json:"valid_id"`
+				CountryID    interface{} `json:"country_id"`
+				PlatformID   int         `json:"platform_id"`
 				Gender       string      `json:"gender"`
 				Confirm      int         `json:"confirm"`
 				Vip          int         `json:"vip"`
@@ -104,7 +104,7 @@ type UserResponseByID struct {
 				LastReaction int         `json:"last_reaction"`
 				LastMailed   int         `json:"last_mailed"`
 				CreatedAt    string      `json:"created_at"`
-				Id           int         `json:"id"`
+				ID           int         `json:"id"`
 				RegisteredAt string      `json:"registered_at"`
 				UpdatedAt    string      `json:"updated_at"`
 			} `json:"user"`
@@ -155,6 +155,36 @@ func (c *Client) GetUserInfo(email string) (*UserResponse, error) {
 func (c *Client) GetUserInfoByID(id int64) (*UserResponseByID, error) {
 	// https://sendios.readme.io/reference/get-user-custom-fields-by-user
 	url := fmt.Sprintf("https://api.sendios.io/v1/userfields/user/%d", id)
+
+	statusCode, body, err := c.makeRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, errors.Wrap(err, "get user info")
+	}
+
+	if statusCode != http.StatusOK {
+		var resp ErrorResponse
+		if err := json.Unmarshal(body, &resp); err != nil {
+			fmt.Println(string(body))
+
+			return nil, errors.Wrap(err, "map get user error")
+		}
+
+		return nil, fmt.Errorf("get user error: %s", resp.Data.Error)
+	}
+
+	var resp UserResponseByID
+	if err := json.Unmarshal(body, &resp); err != nil {
+		fmt.Println(string(body))
+
+		return nil, errors.Wrap(err, "map get user response")
+	}
+
+	return &resp, nil
+}
+
+func (c *Client) GetUserFields(email string) (*UserResponseByID, error) {
+	// https://sendios.readme.io/reference/get-user-custom-fields
+	url := fmt.Sprintf("https://api.sendios.io/v1/userfields/project/%d/email/%s", c.Config.Project, email)
 
 	statusCode, body, err := c.makeRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -276,14 +306,14 @@ type CreateClientUserResponse struct {
 func (c *Client) CreateClientUser(email string) (*CreateClientUserResponse, error) {
 	type CreateClientUserRequest struct {
 		Email        string `json:"email"`
-		ProjectId    int    `json:"project_id"`
-		ClientUserId int    `json:"client_user_id"`
+		ProjectID    int    `json:"project_id"`
+		ClientUserID int    `json:"client_user_id"`
 	}
 
 	data, err := json.Marshal(CreateClientUserRequest{
 		Email:        email,
-		ProjectId:    c.Config.Project,
-		ClientUserId: c.Config.ClientID,
+		ProjectID:    c.Config.Project,
+		ClientUserID: c.Config.ClientID,
 	})
 
 	statusCode, body, err := c.makeRequest(http.MethodPost, "https://api.sendios.io/v1/clientuser/create", bytes.NewReader(data))
