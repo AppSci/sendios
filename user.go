@@ -57,7 +57,7 @@ type UserResponse struct {
 				SubjectID   int         `json:"subject_id"`
 				TemplateID  int         `json:"template_id"`
 				SplitGroup  int         `json:"split_group"`
-				SourceID    int         `json:"source_id"`
+				SourceID    interface{} `json:"source_id"`
 				ServerID    int         `json:"server_id"`
 				CreatedAt   string      `json:"created_at"`
 				MailGroupID int         `json:"mail_group_id"`
@@ -350,9 +350,9 @@ type UnsubscribeStatusResponse struct {
 	} `json:"_meta"`
 	Data struct {
 		Result struct {
-			ProjectID int `json:"project_id"`
-			UserID    int `json:"user_id"`
-			SourceID  int `json:"source_id"`
+			ProjectID int         `json:"project_id"`
+			UserID    int         `json:"user_id"`
+			SourceID  interface{} `json:"source_id"`
 			Meta      struct {
 				Message string `json:"message"`
 			} `json:"meta"`
