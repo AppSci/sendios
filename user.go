@@ -86,27 +86,27 @@ type UserResponseByID struct {
 	Data struct {
 		Result struct {
 			User struct {
-				ProjectID    int         `json:"project_id"`
-				ListID       interface{} `json:"list_id"`
-				Email        string      `json:"email"`
-				Name         string      `json:"name"`
-				LanguageID   interface{} `json:"language_id"`
-				CityID       int         `json:"city_id"`
-				VendorID     int         `json:"vendor_id"`
-				ValidID      interface{} `json:"valid_id"`
-				CountryID    interface{} `json:"country_id"`
-				PlatformID   int         `json:"platform_id"`
-				Gender       string      `json:"gender"`
-				Confirm      int         `json:"confirm"`
-				Vip          int         `json:"vip"`
-				ErrResponse  int         `json:"err_response"`
-				LastOnline   int         `json:"last_online"`
-				LastReaction int         `json:"last_reaction"`
-				LastMailed   int         `json:"last_mailed"`
-				CreatedAt    string      `json:"created_at"`
-				ID           int         `json:"id"`
-				RegisteredAt string      `json:"registered_at"`
-				UpdatedAt    string      `json:"updated_at"`
+				// ProjectID    int         `json:"project_id"`
+				// ListID       interface{} `json:"list_id"`
+				// Email        string      `json:"email"`
+				// Name         interface{} `json:"name"` // name can be int
+				// LanguageID   interface{} `json:"language_id"`
+				// CityID       int         `json:"city_id"`
+				// VendorID     int         `json:"vendor_id"`
+				// ValidID      interface{} `json:"valid_id"`
+				// CountryID    interface{} `json:"country_id"`
+				// PlatformID   int         `json:"platform_id"`
+				// Gender       string      `json:"gender"`
+				Confirm int `json:"confirm"`
+				// Vip          int         `json:"vip"`
+				// ErrResponse  int         `json:"err_response"`
+				// LastOnline   int         `json:"last_online"`
+				// LastReaction int         `json:"last_reaction"`
+				// LastMailed   int         `json:"last_mailed"`
+				// CreatedAt    string      `json:"created_at"`
+				// ID           int         `json:"id"`
+				// RegisteredAt string      `json:"registered_at"`
+				// UpdatedAt    string      `json:"updated_at"`
 			} `json:"user"`
 			CustomFields interface{} `json:"custom_fields"`
 		} `json:"result"`
